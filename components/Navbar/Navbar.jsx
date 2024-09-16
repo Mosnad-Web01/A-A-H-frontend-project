@@ -12,6 +12,9 @@ export default function Navbar() {
             <a className="text-2xl font-bold">TMDb</a>
           </Link>
         </div>
+        <div>
+          s;dgaohhgkjsrehgi
+        </div>
 
         {/* User/Options */}
         <div className="flex items-center space-x-4">
