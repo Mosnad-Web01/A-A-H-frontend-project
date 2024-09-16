@@ -1,7 +1,7 @@
 'use client'
 // components/Navbar.js
 import Link from 'next/link';
-
+import '../../styles/globals.css';
 export default function Navbar() {
   return (
     <nav className="bg-gray-900 text-white py-4">
