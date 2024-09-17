@@ -4,43 +4,19 @@ import React, { useState, useEffect } from 'react';
 import MovieListHeading from '../../components/Movies/MovieListHeading';
 import SearchBox from '../../components/Movies/SearchBox';
 import MovieList from '../../components/Movies/MovieList';
+import {fetchMovies} from '../lib/fetchMovies'; // Import the function from generalFetch
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
-  const fetchMovies = async (query) => {
-    // Normalize the search value to lowercase
-    const normalizedQuery = query.trim().toLowerCase();
-
-    let url;
-
-    if (normalizedQuery === '') {
-      // Fetch popular movies
-      url = `http://www.omdbapi.com/?s=star wars&apikey=ddae6c15`;
-    } else {
-      // Search for movies
-      url = `http://www.omdbapi.com/?s=${encodeURIComponent(normalizedQuery)}&apikey=ddae6c15`;
-    }
-
-    try {
-      const response = await fetch(url);
-      const responseJson = await response.json();
-      console.log(responseJson);
-
-      if (responseJson.results || responseJson.Search) {
-        setMovies(responseJson.results || responseJson.Search);
-      } else {
-        setMovies([]); // Clear movies if no results
-      }
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-      setMovies([]); // Handle error gracefully
-    }
-  };
-
   useEffect(() => {
-    fetchMovies(searchValue);
+    const getMovies = async () => {
+      const movies = await fetchMovies(searchValue);
+      setMovies(movies);
+    };
+    
+    getMovies();
   }, [searchValue]);
 
   return (
