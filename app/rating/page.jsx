@@ -58,7 +58,7 @@ const Rating = ({ movie,rating,setRating,mood,setMood,onClose }) => {
           ))}
         </div>
 
-        <button onClick={handleSubmit} className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">I'm Done</button>
+        <button onClick={handleSubmit} className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">I am Done</button>
       </div>
     </div>
   );

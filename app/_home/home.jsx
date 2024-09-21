@@ -1,39 +1,36 @@
-// pages/home.js
 'use client';
 
-import React from 'react';
-import MovieListHeading from '../../components/Movies/MovieListHeading';
-import SearchBox from '../../components/Movies/SearchBox';
+import React, { useState, useEffect } from 'react';
 import MovieList from '../../components/Movies/MovieList';
-import HomeContainer from '../../containers/homeContainer'; // Import the logic
+import { fetchMovies } from '../../services/fetchMovies'; 
 
 const Home = () => {
-  const { searchValue, handleSearch, movies, hasMore, handleLoadMore } = HomeContainer();
+  const [movies, setMovies] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAndSetMovies = async () => {
+      setLoading(true);
+      const fetchedMovies = await fetchMovies(searchValue);
+      setMovies(fetchedMovies);
+      setLoading(false);
+    };
+    
+    fetchAndSetMovies();
+  }, [searchValue]);
 
   return (
-    <div className="relative min-h-screen">
-      <header className="text-4xl text-white font-bold text-center mb-8">
-        <div className="row d-flex align-items-center mt-4 mb-4">
-          <MovieListHeading heading="Movies" />
-          <SearchBox searchValue={searchValue} setSearchValue={handleSearch} />
-        </div>
-        <h1>Movie Recommendations</h1>
+    <div className="relative min-h-screen bg-gray-900 text-white bg-cover bg-center" style={{ backgroundImage: 'url(/path/to/your/background-image.jpg)' }}>
+      <header className="text-center mb-10 py-8 bg-gray-800 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-semibold">Movie Recommendations</h1>
       </header>
-      <main className="relative min-h-screen">
-        <section className="container mx-auto">
-          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            <MovieList movies={movies} />
-          </section>
-          {hasMore && (
-            <div className="text-center mt-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handleLoadMore}
-              >
-                Load More
-              </button>
-            </div>
-          )}
+      
+      <main className="relative">
+        <section className="container mx-auto px-4">
+          <div className="grid gap-6">
+            <MovieList movies={movies} loading={loading} />
+          </div>
         </section>
       </main>
     </div>
