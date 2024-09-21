@@ -1,5 +1,5 @@
 const baseUrl = 'https://api.themoviedb.org/3/';
-import '../../.env';
+import '../.env';
 
 const generateApiUrl = ({
   type = 'movie',
