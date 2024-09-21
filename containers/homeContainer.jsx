@@ -1,10 +1,8 @@
 // containers/home-page.js
 import { useState, useEffect } from 'react';
-import { useMovieFilter } from  '../app/lib/movieFilterContext';
-import { fetchMovies } from  '../app/lib/fetchMovies'; 
+import { fetchMovies } from  '../services/fetchMovies'; 
 
 const HomeContainer = () => {
-  const { filteredMovies, setFilteredMovies } = useMovieFilter();
   const [searchValue, setSearchValue] = useState('');
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
