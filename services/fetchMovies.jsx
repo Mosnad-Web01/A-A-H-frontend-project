@@ -1,6 +1,6 @@
 // generalFetch.js
 // Function to fetch movies
-import  generateApiUrl  from '../lib/generateApiUrl'; // Import the utility function
+import  generateApiUrl  from '../services/generateApiUrl'; // Import the utility function
  
 export const fetchMovies = async (query) => {
   const normalizedQuery = query.trim().toLowerCase();
