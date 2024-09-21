@@ -2,13 +2,16 @@
 // Function to fetch movies
 import  generateApiUrl  from '../services/generateApiUrl'; // Import the utility function
  
-export const fetchMovies = async (query) => {
-  const normalizedQuery = query.trim().toLowerCase();
+export const fetchMovies = async (query,page) => {
+  const normalizedQuery = String(query).trim().toLowerCase();
+  console.log(' Featch qurey.id,', query.Id)
   const url = generateApiUrl({
-    type: 'movie',
+    Id: query.Id,
     category: normalizedQuery ? 'search' : 'popular',
-    query: normalizedQuery
+    Page :page,
+    query: normalizedQuery,
   });
+  console.log('fetach back URL',url);
   try {
     const response = await fetch(url);
     const responseJson = await response.json();
