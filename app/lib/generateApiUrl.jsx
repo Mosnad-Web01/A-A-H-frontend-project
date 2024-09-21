@@ -7,14 +7,32 @@ const generateApiUrl = ({
   category = 'popular',
   period = 'week',
   lang = 'en-US',
+  Page ='1',
   year,
   query,
+  Id, // Add movieId parameter to handle specific movie
   queryParams = {}
 }) => {
-  // Determine the endpoint based on the type and category
-  let endpoint;
 
-  if (category === 'trending') {
+  // Determine the endpoint based on the type, category, and movieId
+  let endpoint;
+  console.log('queryParams page',queryParams);
+
+  // Check if movieId is provided to get details for a specific movie
+  if (Id && Id.trim() !== "") {
+    let cendpoint = Id.split('/').filter(Boolean); // تقسيم النص عند كل '/' وتجاهل القيم الفارغة
+
+// استخراج الجزء الأخير من النص (الرقم)
+cendpoint = cendpoint[cendpoint.length - 1];
+
+console.log('endpoint:', cendpoint);
+
+// إنشاء endpoint باستخدام الرقم المستخرج
+endpoint = `${type}/${cendpoint}`;
+
+console.log('Final endpoint:', endpoint); // النتيجة النهائية "movie/7887"
+
+  } else if (category === 'trending') {
     endpoint = `${type}/trending/${period}`;
   } else if (category === 'search') {
     endpoint = `search/${type}`;
@@ -27,14 +45,19 @@ const generateApiUrl = ({
   } else {
     endpoint = `${type}/popular`;
   }
+  console.log('endpoint before ',endpoint);
+  console.log('query before ',query.id);
+
+
 
   // Add search query if applicable
   const queryParamString = [
     ...Object.keys(queryParams).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`),
     query ? `query=${encodeURIComponent(query)}` : '',
     `api_key=${PUBLIC_API_KEY}`,
-    `language=${lang}`
-  ].filter(Boolean).join('&');
+    `language=${lang}`,
+    `page=${Page}`
+    ].filter(Boolean).join('&');
 
   // Return the full API URL
   console.log(`${baseUrl}${endpoint}?${queryParamString}`);

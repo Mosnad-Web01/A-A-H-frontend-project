@@ -1,28 +1,17 @@
 import Link from 'next/link';
-import MovieContainer from '../../containers/movieContainer'
 
 const MovieList = ({ movies }) => {
   if (!movies || movies.length === 0) {
     return <p className='text-white text-center'>No movies found</p>;
   }
 
-  const handleMovieClick = (movie) => {
-    // تخزين تفاصيل الفيلم في localStorage
-
-    localStorage.setItem('selectedMovie', JSON.stringify(movie));
-    
-
-  };
-
   return (
     <>
-
       {movies.map((movie) => (
         <Link key={movie.id} href={`/movie/${movie.id}`}>
-
+          
           <article
             className='bg-gray-800 p-3 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer'
-            onClick={() => handleMovieClick(movie)}  // حفظ تفاصيل الفيلم عند الضغط عليه
           >
             <figure>
               <img
@@ -34,7 +23,7 @@ const MovieList = ({ movies }) => {
             </figure>
           </article>
         </Link>
-       ))}
+      ))}
     </>
   );
 };

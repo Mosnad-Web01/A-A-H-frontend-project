@@ -1,9 +1,8 @@
-
+'use client';
+import { MovieFilterProvider } from './lib/movieFilterContext';
 
 import Navbar from '../components/Navbar/Navbar';
 import './globals.css';
-
-// These styles apply to every route in the application
  
 
 export default function RootLayout({ children }) {
@@ -11,8 +10,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
       >
+      <MovieFilterProvider>
         <Navbar/>
         {children}
+        </MovieFilterProvider>
       </body>
     </html>
   );

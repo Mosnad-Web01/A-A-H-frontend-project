@@ -1,5 +1,5 @@
 import MovieContainer from '../../../containers/movieContainer';
-const Movies = () => {
+const MovieDetail = () => {
 
   return (
     <div>  
@@ -8,4 +8,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default MovieDetail;
