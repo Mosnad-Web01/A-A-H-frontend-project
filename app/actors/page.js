@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import '../../.env';
 import ActorCard from '../../components/ActorCard/ActorCard';
+import { Box, Heading, SimpleGrid, Text, Spinner } from '@chakra-ui/react';
 
 
 const API_BASEURL = 'https://api.themoviedb.org/3';
@@ -37,20 +38,34 @@ export default function Actors() {
     fetchPopularActors();
   }, []);
 
-  if (loading) return <p className="text-white text-center">Loading actors...</p>;
+  if (loading) {
+    return (
+      <Box textAlign="center" py={6} bg="background" rounded="lg">
+        <Spinner size="lg" color="teal.500" />
+        <Text mt={4} fontSize="lg" color="white">
+          Loading actors...
+        </Text>
+      </Box>
+    );
+  }
 
   return (
-    <div className="container mx-auto py-6 bg-background rounded-lg w-full">
-      <h1 className="text-3xl font-bold mb-4">Popular Actors</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {Array.isArray(actors) && actors.length > 0 ? (
-          actors.map((actor) => (
-            <ActorCard key={actor.id} actor={actor} />
-          ))
-        ) : (
-          <p>No actors found.</p> // Handle the case when no actors are found
-        )}
-      </div>
-    </div>
+    <Box className="container mx-auto py-6" bg="background" rounded="lg">
+    <Heading as="h1" size="xl" mb={4} textAlign="center" color="white">
+      Popular Actors
+    </Heading>
+    <SimpleGrid columns={{ base: 2, md: 4 }} spacing={6}>
+      {Array.isArray(actors) && actors.length > 0 ? (
+        actors.map((actor) => (
+          <ActorCard key={actor.id} actor={actor} />
+        ))
+      ) : (
+        <Text textAlign="center" fontSize="lg" color="red.500" fontWeight="bold">
+          No actors found.
+        </Text> // Styled no actors found message
+      )}
+    </SimpleGrid>
+  </Box>
   );
 }
+

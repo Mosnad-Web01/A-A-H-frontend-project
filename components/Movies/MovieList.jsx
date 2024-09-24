@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import Image from "next/image";
+import { Box, Text, useColorModeValue } from '@chakra-ui/react';
 
 const MovieList = ({ movies }) => {
+  // These values will change based on the current color mode
+  const textColor = useColorModeValue('text.light', 'text.dark');
+  const bgColor = useColorModeValue('gray.200', 'primary.800');
+  const secondaryColor = useColorModeValue('secondary.light', 'secondary.dark');
+
   if (!movies || movies.length === 0) {
-    return <p className='text-white text-center'>No movies found</p>;
+    return <Text color={textColor} textAlign="center">No movies found</Text>;
   }
 
   const handleMovieClick = (movie) => {
@@ -11,16 +17,46 @@ const MovieList = ({ movies }) => {
   };
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8 p-4">
+    <Box 
+      as="section" 
+      overflowX="auto" 
+      whiteSpace="nowrap" 
+      p={4} 
+      display="flex" 
+      gap={4} // Space between movie cards
+      sx={{ 
+        scrollBehavior: 'smooth', // Enable smooth scrolling
+        scrollbarWidth: 'thin', // For Firefox (optional)
+        '&::-webkit-scrollbar': { // Custom scrollbar for WebKit browsers
+          width: '8px',
+          height: '8px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'gray.400',
+          borderRadius: '8px',
+        },
+      }}
+    >
       {movies.map((movie) => (
-        <Link key={movie.id} href={`/movie/${movie.id}`}>
-          <article
-            className='bg-gray-800 p-3 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer'
+        <Link key={movie.id} href={`/movie/${movie.id}`} passHref>
+          <Box
+            as="article"
+            bg={bgColor} // Background color based on theme
+            p={3}
+            rounded="lg"
+            shadow="lg"
+            transition="transform 0.3s ease-in-out" // Animation on hover
+            _hover={{ transform: 'scale(1.05)', bg: secondaryColor }} // Change background on hover
+            cursor="pointer"
             onClick={(e) => {
               handleMovieClick(movie);
               e.stopPropagation(); // Prevents the event from bubbling up
-            }}>
-            <figure>
+            }}
+            display="inline-block" // Important for horizontal scrolling
+            minWidth="220px" // Ensure cards have a minimum width
+            
+          >
+            <Box as="figure" >
               <Image
                 width={220} 
                 height={330} 
@@ -29,26 +65,26 @@ const MovieList = ({ movies }) => {
                 className='w-full h-72 object-cover rounded-md'
                 priority={false}
               />
-            </figure>
-            <figcaption className="text-white text-center mt-4">
-              <h3 className="text-lg font-semibold truncate max-w-full">
+            </Box>
+            <Box as="figcaption" color={textColor} textAlign="center" mt={4}>
+              <Text as="h3" fontSize="lg" fontWeight="semibold" isTruncated>
                 {movie.title || "Unknown Title"}
-              </h3>
+              </Text>
               {movie.release_date && (
-                <p className="text-sm text-gray-400">
+                <Text fontSize="sm" color="gray.400">
                   {new Date(movie.release_date).toLocaleDateString()}
-                </p>
+                </Text>
               )}
               {movie.vote_average && (
-                <p className="text-sm text-yellow-400">
+                <Text fontSize="sm" color="yellow.400">
                   Rating: {movie.vote_average.toFixed(1)}/10
-                </p>
+                </Text>
               )}
-            </figcaption>
-          </article>
+            </Box>
+          </Box>
         </Link>
       ))}
-    </div>
+    </Box>
   );
 };
 
