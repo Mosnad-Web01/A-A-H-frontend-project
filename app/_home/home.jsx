@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import MovieList from '../../components/Movies/MovieList';
 import { fetchMovies } from '../../services/fetchMovies'; 
 
