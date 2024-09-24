@@ -1,3 +1,5 @@
+import { Box, Flex, Image, Heading, Text, Button, CircularProgress, Stack } from '@chakra-ui/react';
+
 const MovieDetails = ({ movie, rating, onVibeClick, onAddToList }) => {
   const score =
     movie && movie.vote_average !== null
@@ -7,14 +9,15 @@ const MovieDetails = ({ movie, rating, onVibeClick, onAddToList }) => {
         : 0;
 
   const getScoreColor = (score) => {
-    if (score >= 70) return "bg-green-500";
-    if (score >= 50) return "bg-yellow-500";
-    return "bg-red-500";
+    if (score >= 70) return "green.500";  // Chakra color
+    if (score >= 50) return "yellow.500"; // Chakra color
+    return "red.500";                     // Chakra color
   };
+  
   const scoreColorClass = getScoreColor(score);
 
   if (!movie) {
-    return <p className="text-white text-center">Loading...</p>;
+    return <Text color="white" textAlign="center">Loading...</Text>;
   }
 
   const posterUrl = movie.poster_path
@@ -22,153 +25,183 @@ const MovieDetails = ({ movie, rating, onVibeClick, onAddToList }) => {
     : "/default-poster.jpg";
 
   return (
-    <div className="relative min-h-screen bg-[#032541] text-white">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${posterUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      ></div>
-      <div className="absolute inset-0 bg-black bg-opacity-85"></div>
+    <Box 
+      position="relative" 
+      minH="100vh" 
+      bg="#032541" 
+      color="white"
+    >
+      <Box 
+        position="absolute" 
+        inset={0} 
+        bgImage={`url(${posterUrl})`} 
+        bgSize="cover" 
+        bgPosition="center"
+        filter="blur(8px)"
+      />
+      <Box 
+        position="absolute" 
+        inset={0} 
+        bg="black" 
+        opacity={0.85} 
+      />
 
-      <main className="relative">
-        <div className="relative z-10 container mx-auto p-8">
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="md:w-1/3">
-              <img
-                src={posterUrl}
-                alt={`${movie.title} Poster`}
-                className="w-full rounded-lg shadow-lg"
-              />
-            </div>
+      <Box position="relative" zIndex={1}>
+        <Flex 
+          direction={{ base: 'column', md: 'row' }} 
+          gap={8} 
+          p={8}
+          maxW="container.xl" 
+          mx="auto"
+        >
+          <Box flexBasis={{ base: '100%', md: '30%' }}>
+            <Image
+              src={posterUrl}
+              alt={`${movie.title} Poster`}
+              borderRadius="lg"
+              boxShadow="lg"
+            />
+          </Box>
 
-            <div className="md:w-2/3">
-              <h1 className="text-4xl font-bold mb-2">
-                {movie.title} ({new Date(movie.release_date).getFullYear()})
-              </h1>
-              <p className="text-sm mb-4">
-                {movie.release_date} •{" "}
-                {movie.genres?.map((g) => g.name).join(", ")} •{" "}
-                {movie.runtime} min
-              </p>
+          <Box flexBasis={{ base: '100%', md: '70%' }}>
+            <Heading size="xl" mb={2}>
+              {movie.title} ({new Date(movie.release_date).getFullYear()})
+            </Heading>
+            <Text fontSize="sm" mb={4}>
+              {movie.release_date} •{" "}
+              {movie.genres?.map((g) => g.name).join(", ")} •{" "}
+              {movie.runtime} min
+            </Text>
 
-              <div className="flex items-center mb-4">
-                <div
-                  className="relative z-50 w-16 h-16 rounded-full flex items-center justify-center border-4 border-[#081c22] mr-1"
-                  style={{
-                    background: `conic-gradient(${scoreColorClass} ${score}%, #081c22 ${score}%)`,
-                  }}
+            <Flex alignItems="center" mb={4}>
+              <Box 
+                position="relative" 
+                width="64px" 
+                height="64px" 
+                borderRadius="full" 
+                border={`4px solid #081c22`} 
+                mr={2}
+                display="flex" 
+                alignItems="center" 
+                justifyContent="center"
+                background={`conic-gradient(${scoreColorClass} ${score}%, #081c22 ${score}%)`}
+              >
+                <Text fontWeight="bold" fontSize="xl" color="white">
+                  {score}%
+                </Text>
+              </Box>
+              <Text fontWeight="semibold">User Score</Text>
+
+              <Button
+                onClick={onVibeClick}
+                colorScheme="teal"
+                variant="solid"
+                ml={4}
+              >
+                Whats your Vibe?
+              </Button>
+              <Text ml={4} fontSize="sm" color="gray.300">
+                Your Rating: {rating}%
+              </Text>
+            </Flex>
+
+            <Stack direction="row" spacing={4} mb={4}>
+              <Button 
+                onClick={onAddToList} 
+                colorScheme="blue" 
+                variant="solid" 
+                rounded="full" 
+                title="Add to My List"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-10 w-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  <span className="font-bold text-xl text-white">
-                    {score}%
-                  </span>
-                </div>
-                <span className="font-semibold">User Score</span>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              </Button>
 
-                <button
-                  onClick={onVibeClick}
-                  className="ml-4 px-4 py-2 bg-[#063f4e] text-white rounded-3xl hover:bg-[#0190b8] transition"
+              <Button 
+                colorScheme="blue" 
+                variant="solid" 
+                rounded="full" 
+                title="Add to Favorites"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-10 w-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  What's your Vibe?
-                </button>
-                <span className="ml-4 text-sm text-gray-300">
-                  Your Rating: {rating}%
-                </span>
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </Button>
 
-              {/* إضافة الأزرار الأربعة */}
-              <div className="flex space-x-4 mb-4">
-                <button
-                  onClick={onAddToList}
-                  className="bg-[#033f57] p-3 rounded-full hover:bg-blue-600 transition"
-                  title="Add to My List"
+              <Button 
+                colorScheme="blue" 
+                variant="solid" 
+                rounded="full" 
+                title="Watch Later"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-10 w-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                </button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 8v4l3 3"
+                  />
+                </svg>
+              </Button>
 
-                <button
-                  className="bg-[#033f57] p-3 rounded-full hover:bg-blue-600 transition"
-                  title="Add to Favorites"
+              <Button 
+                colorScheme="blue" 
+                variant="solid" 
+                rounded="full" 
+                title="Play Trailer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-10 w-10"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M14.752 11.168l-4.752-3v10l4.752-3z"
+                  />
+                </svg>
+              </Button>
+            </Stack>
 
-                <button
-                  className="bg-[#033f57] p-3 rounded-full hover:bg-blue-600 transition"
-                  title="Watch Later"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 8v4l3 3"
-                    />
-                  </svg>
-                </button>
-
-                <button
-                  className="bg-[#033f57] p-3 rounded-full hover:bg-blue-600 transition"
-                  title="Play Trailer"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.752 11.168l-4.752-3v10l4.752-3z"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              <h2 className="text-2xl font-semibold mb-2">Overview</h2>
-              <p className="text-lg mb-4">{movie.overview}</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+            <Heading size="lg" mb={2}>Overview</Heading>
+            <Text fontSize="lg" mb={4}>{movie.overview}</Text>
+          </Box>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

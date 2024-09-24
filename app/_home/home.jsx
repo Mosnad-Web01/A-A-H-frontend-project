@@ -1,40 +1,93 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-
+import { Box, Heading, Spinner, Container, Button, Stack, useColorModeValue } from '@chakra-ui/react';
 import MovieList from '../../components/Movies/MovieList';
-import { fetchMovies } from '../../services/fetchMovies'; 
+import { fetchMovies } from '../../services/fetchMovies';
+import SearchBox from '../../components/Navbar/SearchBox';
+
+const genres = ['Action', 'Comedy', 'Drama', 'Horror'];
+const genreIds = {
+  Action: 28,
+  Comedy: 35,
+  Drama: 18,
+  Horror: 27,
+ 
+}; 
 
 const Home = () => {
-  const [movies, setMovies] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
-  const [loading, setLoading] = useState(true);
-
+  const [movies, setMovies] = useState([]);         
+  const [selectedGenre, setSelectedGenre] = useState(null); 
+  const [loading, setLoading] = useState(true);   
+  const [searchValue, setSearchValue] = useState('');   
+  // Fetch movies based on selected genre
   useEffect(() => {
     const fetchAndSetMovies = async () => {
-      setLoading(true);
-      const fetchedMovies = await fetchMovies(searchValue);
+      setLoading(true); 
+      console.log('Fetching movies for genre:', selectedGenre); 
+      const fetchedMovies = await fetchMovies(selectedGenre);
       setMovies(fetchedMovies);
-      setLoading(false);
+      setLoading(false); 
     };
-    
+
     fetchAndSetMovies();
-  }, [searchValue]);
+  }, [selectedGenre]); 
+
+  
+  const bgColor = useColorModeValue('background.light', 'background.dark');
+  const textColor = useColorModeValue('text.light', 'text.dark');
 
   return (
-    <div className="relative min-h-screen bg-gray-900 text-white bg-cover bg-center" style={{ backgroundImage: 'url(/path/to/your/background-image.jpg)' }}>
-      <header className="text-center mb-10 py-8 bg-gray-800 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold">Movie Recommendations</h1>
-      </header>
-      
-      <main className="relative">
-        <section className="container mx-auto px-4">
-          <div className="grid gap-6">
-            <MovieList movies={movies} loading={loading} />
-          </div>
-        </section>
-      </main>
-    </div>
+    <Box
+      position="relative"
+      minH="100vh"
+      bg={bgColor}
+      color={textColor}
+      bgImage="url(/path/to/your/background-image.jpg)"
+      bgSize="cover"
+      bgPosition="center"
+    >
+      <Box textAlign="center" mb={10} py={8} borderRadius="lg" boxShadow="lg">
+        <Heading as="h1" size="xl" fontWeight="semibold" bg={bgColor} color={textColor}>
+          Movie Recommendations
+        </Heading>
+      </Box>
+        <Box >
+          <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
+        </Box>
+      <Box position="relative">
+        <Container maxW="container.xl" px={4}>
+
+          {/* Genre Buttons */}
+          <Stack direction="row" spacing={4} justify="center" mb={8}>
+            {genres.map((genre) => (
+              <Button
+                key={genre}
+                colorScheme={selectedGenre === genre ? 'teal' : 'gray'}
+                onClick={() => {
+                  const genreId = genreIds[genre]; 
+                  console.log(`Selected genre ID: ${genreId}`);
+                  setSelectedGenre(genreId); 
+                }}
+              >
+                {genre}
+              </Button>
+            ))}
+          </Stack>
+
+
+          {/* Display Movie List or Spinner */}
+          {loading ? (
+            <Spinner size="lg" color="teal.500" />
+          ) : (
+            <Box display="grid" gap={6}>
+              <MovieList movies={movies} /> 
+            </Box>
+          )}
+
+        </Container>
+      </Box>
+    </Box>
   );
 };
 
