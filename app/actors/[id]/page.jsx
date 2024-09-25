@@ -1,10 +1,10 @@
 "use client"; 
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import '../../../.env';
-import { FaInstagram, FaTwitter, FaFacebook } from 'react-icons/fa';
 const API_BASEURL = 'https://api.themoviedb.org/3';
 
 export default function ActorDetails({ params: { id } }) {
