@@ -1,73 +1,109 @@
-// Navbar.js
 'use client';
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import SearchBox from '../Movies/SearchBox';
-import GenreDropdown from './GenreDropdown';
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  FormControl,
+  HStack,
+  Spinner,
+  useColorMode,
+  IconButton,
+  useBreakpointValue,
+} from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import SearchBox from './SearchBox';
 import MovieMenu from './MovieMenu';
 import AuthLinks from './AuthLinks';
 
 export default function Navbar() {
-  const [movies, setMovies] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode();
 
-  const fetchMovies = async (searchTerm, genreId) => {
-    if (!searchTerm) return [];
-    
+  const fetchMovies = async () => {
+    if (!searchValue) return;
+
+    setLoading(true);
     try {
-      const response = await fetch(`/api/movies?query=${encodeURIComponent(searchTerm)}&genre=${genreId || ''}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch movies");
-      }
+      const response = await fetch(`/api/movies?query=${encodeURIComponent(searchValue)} || ''}`);
+      if (!response.ok) throw new Error('Failed to fetch movies');
       const data = await response.json();
-      return data.movies;
+      // Process the fetched data if needed
     } catch (error) {
-      console.error("Error fetching movies:", error);
-      return [];
+      console.error('Error fetching movies:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchAndSetMovies = async () => {
-      setLoading(true);
-      try {
-        const fetchedMovies = await fetchMovies(searchValue, selectedGenre);
-        setMovies(fetchedMovies);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchAndSetMovies();
-  }, [searchValue, selectedGenre]);
+    fetchMovies();
+  }, [searchValue]);
+
+  // Responsive styles for button
+  const buttonSize = useBreakpointValue({ base: 'sm', md: 'md' });
 
   return (
-    <nav className="bg-gray-900 text-white py-4 shadow-md">
-      <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center">
-          <Link href="/" legacyBehavior>
-            <a className="text-2xl font-bold hover:text-red-500 transition-colors">TMDb</a>
-          </Link>
-        </div>
+    <Box as="nav" bg={colorMode === 'dark' ? 'gray.800' : 'gray.200'} py={4} shadow="md">
+      <Box maxW="container.xl" mx="auto" px={4}>
+        <Flex align="center" justify="space-between" flexWrap="wrap">
+          {/* Logo Section */}
+          <Heading size="lg" fontWeight="bold" color={colorMode === 'dark' ? 'white' : 'black'}>
+            <Link href="/" passHref>
+              TMDb
+            </Link>
+          </Heading>
 
-        <GenreDropdown selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenre} />
+          {/* Dropdowns and Buttons */}
+          <HStack spacing={4} mb={{ base: 4, md: 0 }}>
+            <Link href="/movies" passHref>
+            Movies
+            </Link>     
 
-        <MovieMenu />
+            <Link href="/actors" passHref>
+              <Button
+                variant="solid"
+                colorScheme="teal"
+                size={buttonSize}
+                className="transition duration-300 ease-in-out transform hover:bg-teal-400 hover:scale-105"
+                _active={{ bg: 'teal.600' }}
+              >
+                Actors
+              </Button>
+            </Link>
+          </HStack>
 
-        <Link href="/actors" legacyBehavior>
-          <a className="text-white px-4 py-2">Actors</a>
-        </Link>
+          {/* Search Box */}
+          <FormControl maxW="300px" mb={{ base: 4, md: 0 }}>
+            <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
+          </FormControl>
 
-        <form>
-          <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
-        </form>
+          {/* Authentication Links */}
+          <AuthLinks />
 
-        <AuthLinks />
-      </div>
-    </nav>
+          {/* Theme Toggle Button */}
+          <IconButton
+            aria-label="Toggle dark mode"
+            icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+            onClick={toggleColorMode}
+            variant="outline"
+            colorScheme="teal"
+            size="sm"
+            className="transition duration-300 ease-in-out transform hover:scale-105"
+          />
+        </Flex>
+
+        {/* Loader */}
+        {loading && (
+          <HStack justify="center" mt={4}>
+            <Spinner size="md" color="red.500" />
+          </HStack>
+        )}
+      </Box>
+    </Box>
   );
 }
