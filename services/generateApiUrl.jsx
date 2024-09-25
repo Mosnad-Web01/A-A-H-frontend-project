@@ -22,7 +22,7 @@ const generateApiUrl = ({
   const endpoint = year
     ? `${type}/${year}/popular`
     : endpoints[category] || endpoints.popular;
-
+  
   // Create query parameters
   const params = new URLSearchParams({
     api_key: PUBLIC_API_KEY,
