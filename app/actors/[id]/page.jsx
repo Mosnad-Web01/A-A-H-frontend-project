@@ -1,8 +1,9 @@
-import { Box, Image, Heading, Text, Flex } from '@chakra-ui/react';
+// app/actors/[id]/page.js
+import Image from 'next/image';
 import '../../../.env';
 
+// Define the API base URL and key
 const API_BASEURL = 'https://api.themoviedb.org/3';
-
 export default async function ActorDetails({ params }) {
   const { id } = params;
 
@@ -11,52 +12,34 @@ export default async function ActorDetails({ params }) {
   const actor = await res.json();
 
   if (!res.ok) {
-    return <Text color="red.500" textAlign="center">Actor not found</Text>;
+    return <p>Actor not found</p>;
   }
 
   return (
-    <Box 
-      mx="auto" 
-      py={6} 
-      px={4} 
-      maxW="7xl"
-      bg="background.light" 
-      rounded="lg" 
-      boxShadow="md"
-    >
-      <Heading as="h1" size="xl" mb={4} textAlign="center" color="primary.500">
-        {actor.name}
-      </Heading>
-      <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
-        <Box w={{ base: 'full', md: '33%' }} textAlign="center">
+    <div className="container mx-auto py-6 bg-background">
+      <h1 className="text-3xl font-bold mb-4">{actor.name}</h1>
+      <div className="flex flex-col md:flex-row gap-6">
+        <div className="w-full md:w-1/3">
           <Image
             src={actor.profile_path ? `https://image.tmdb.org/t/p/w500${actor.profile_path}` : '/default-actor.jpg'}
             alt={actor.name}
-            borderRadius="lg"
-            boxSize="full"
-            objectFit="cover"
+            width={500}
+            height={750}
+            className="rounded-lg"
           />
-        </Box>
-        <Box w={{ base: 'full', md: '67%' }}>
-          <Heading as="h2" size="lg" mb={4} color="primary.600">
-            Biography
-          </Heading>
-          <Text mb={6} fontSize="md" color="text.light">
-            {actor.biography || 'Biography not available.'}
-          </Text>
-          <Box>
-            <Heading as="h3" size="md" mb={2} color="primary.700">
-              Known for:
-            </Heading>
-            <Text fontSize="md" mb={2} color="text.dark">{actor.known_for_department || 'N/A'}</Text>
-            <Text fontSize="md" mb={2} color="text.dark">Birthday: {actor.birthday || 'N/A'}</Text>
-            {actor.deathday && (
-              <Text fontSize="md" mb={2} color="text.dark">Deathday: {actor.deathday}</Text>
-            )}
-            <Text fontSize="md" mb={2} color="text.dark">Place of Birth: {actor.place_of_birth || 'N/A'}</Text>
-          </Box>
-        </Box>
-      </Flex>
-    </Box>
+        </div>
+        <div className="w-full md:w-2/3">
+          <h2 className="text-2xl font-bold">Biography</h2>
+          <p className="mt-4 text-sm">{actor.biography || 'Biography not available.'}</p>
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold">Known for:</h3>
+            <p>{actor.known_for_department}</p>
+            <p>Birthday: {actor.birthday || 'N/A'}</p>
+            {actor.deathday && <p>Deathday: {actor.deathday}</p>}
+            <p>Place of Birth: {actor.place_of_birth || 'N/A'}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
