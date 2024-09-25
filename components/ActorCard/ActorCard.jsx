@@ -2,7 +2,7 @@ export default function ActorCard({ actor, onClick }) {
   return (
     <div
       className="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-500 hover:scale-105 cursor-pointer"
-      onClick={onClick} // Handle card click
+      onClick={onClick}
     >
       <img 
         src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`} 

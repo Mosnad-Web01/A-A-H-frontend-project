@@ -1,7 +1,7 @@
-"use client"; // Mark this file as a Client Component
+"use client";
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link'; // Import Link for navigation
+import Link from 'next/link'; 
 import '../../.env';
 import ActorCard from '../../components/ActorCard/ActorCard';
 
@@ -10,10 +10,10 @@ const API_BASEURL = 'https://api.themoviedb.org/3';
 export default function Actors() {
   const [actors, setActors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1); // Page state
-  const [hasMore, setHasMore] = useState(true); // To track if more actors are available
-  const [totalPages, setTotalPages] = useState(1); // Total pages
-  const pagesToShow = 3; // Number of page buttons to show
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const pagesToShow = 3;
 
   useEffect(() => {
     const fetchPopularActors = async () => {
@@ -24,9 +24,9 @@ export default function Actors() {
         );
         const data = await res.json();
         if (data.results) {
-          setActors(data.results); // Update with current page actors
-          setTotalPages(data.total_pages); // Set total pages
-          setHasMore(data.page < data.total_pages); // Check if there are more pages
+          setActors(data.results);
+          setTotalPages(data.total_pages);
+          setHasMore(data.page < data.total_pages);
         } else {
           setHasMore(false);
         }
@@ -39,7 +39,7 @@ export default function Actors() {
     };
 
     fetchPopularActors();
-  }, [page]); // Trigger fetch when page changes
+  }, [page]);
 
   const handleNextPage = () => {
     if (page < totalPages) setPage(page + 1);
@@ -53,11 +53,9 @@ export default function Actors() {
     setPage(pageNum);
   };
 
-  // Function to render page numbers with ellipsis
   const renderPageNumbers = () => {
     const pages = [];
 
-    // Always show the first page
     pages.push(
       <button
         key={1}
@@ -70,7 +68,6 @@ export default function Actors() {
       </button>
     );
 
-    // Show ellipsis if necessary
     if (page > pagesToShow) {
       pages.push(
         <span key="ellipsis-start" className="text-white px-2">
@@ -79,7 +76,6 @@ export default function Actors() {
       );
     }
 
-    // Show pages around the current page
     for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
       pages.push(
         <button
@@ -94,7 +90,6 @@ export default function Actors() {
       );
     }
 
-    // Show ellipsis before the last page if necessary
     if (page < totalPages - pagesToShow) {
       pages.push(
         <span key="ellipsis-end" className="text-white px-2">
@@ -103,7 +98,6 @@ export default function Actors() {
       );
     }
 
-    // Always show the last page if there are multiple pages
     if (totalPages > 1) {
       pages.push(
         <button
@@ -144,7 +138,6 @@ export default function Actors() {
       ) : (
         <div className="mt-6 text-white text-center">
           <div className="flex justify-center items-center gap-4">
-            {/* Previous Button */}
             <button
               onClick={handlePreviousPage}
               className={`${
@@ -155,10 +148,8 @@ export default function Actors() {
               &laquo; Previous
             </button>
 
-            {/* Render Pagination Numbers */}
             {renderPageNumbers()}
 
-            {/* Next Button */}
             <button
               onClick={handleNextPage}
               className={`${
