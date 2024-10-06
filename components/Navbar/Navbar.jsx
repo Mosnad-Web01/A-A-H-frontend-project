@@ -15,7 +15,7 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import SearchBox from './SearchBox';
+import SearchBox from '../Movies/SearchBox';
 import MovieMenu from './MovieMenu';
 import AuthLinks from './AuthLinks';
 
