@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Heading, Spinner, Container, Button, Stack, useColorModeValue } from '@chakra-ui/react';
 import MovieList from '../../components/Movies/MovieList';
 import { fetchMovies } from '../../services/fetchMovies';
-import SearchBox from '../../components/Navbar/SearchBox';
+import SearchBox from '../../components/Movies/SearchBox';
 
 const genres = ['Action', 'Comedy', 'Drama', 'Horror'];
 const genreIds = {
